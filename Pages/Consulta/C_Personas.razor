@@ -1,0 +1,66 @@
+@page "/C_Personas"
+@inject PersonasBLL personasBLL;
+
+<EditForm Model="lista">
+    <DataAnnotationsValidator />
+    <form>
+        <div>
+            <select @bind="Filtro">
+                <option value="1">Id</option>
+                <option value="2">Nombre</option>
+            </select>
+        </div>
+        <label class="form-control">Criterio</label>
+        <input type="text" class="form-control" @bind="Criterio">
+
+        <div>
+            <button type="button" @onclick="Buscar">
+                <i>Buscar</i>
+            </button>
+        </div>
+
+    </form>
+
+    <table class="table">
+
+        <thead>
+            <tr>
+                <th>PersonaId</th>
+                <th>Nombre</th>
+                <th>Apellido</th>
+                <th>Telefono</th>
+                <th>Direccion</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var persona in lista)
+            {
+                <tr>
+                    <td>@persona.PersonaId</td>
+                    <td>@persona.Nombre</td>
+                    <td>@persona.Apellido</td>
+                    <td>@persona.Telefono</td>
+                    <td>@persona.Direccion</td>
+                    <td><a href="R_Personas/@persona.PersonaId">Ver</a></td>
+                </tr>
+            }
+
+        </tbody>
+
+    </table>
+</EditForm>
+
+@code
+{
+    public string Filtro { get; set; }
+    public string Criterio { get; set; }
+
+    public List<Personas> lista { get; set; } = new List<Personas>();
+    public void Buscar()
+    {
+
+        lista = personasBLL.GetPersonas();
+    }
+
+}

@@ -1,0 +1,122 @@
+@page "/R_Personas"
+@page "/R_Personas/{PersonaId:int}"
+@inject PersonasBLL personasBLL;
+
+<EditForm Model="persona" OnValidSubmit="@Guardar">
+    <DataAnnotationsValidator />
+
+    <div class="card">
+
+        <div class="card-head">
+            <h3>Registro de Personas</h3>
+        </div>
+
+        <div class="card-body">
+            <div class="form-group">
+                <label class="form-control">Nombre</label>
+                <InputText class="form-control" @bind-Value="persona.Nombre"></InputText>
+                <ValidationMessage For="@(() => persona.Nombre)" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-control">Apellido</label>
+                <InputText class="form-control" @bind-Value="persona.Apellido"></InputText>
+                <ValidationMessage For="@(() => persona.Apellido)" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-control">Telefono</label>
+                <InputText class="form-control" @bind-Value="persona.Telefono"></InputText>
+                <ValidationMessage For="@(() => persona.Telefono)" />
+            </div>
+
+            <div class="form-group">
+                <label class="form-control">Direccion</label>
+                <InputText class="form-control" @bind-Value="persona.Direccion"></InputText>
+                <ValidationMessage For="@(() => persona.Direccion)" />
+            </div>
+        </div>
+
+        <div class="card-footer">
+             <button type="button" class="btn btn-lg btn-primary" @onclick="Nuevo">Nuevo</button>
+             <button type="submit" class="btn btn-lg btn-success" >Guardar</button>
+              <button type="button" class="btn btn-lg btn-danger" @onclick="Eliminar">Eliminar</button>
+
+        </div>
+
+    </div>
+</EditForm>
+@code
+{
+    [Parameter]
+    public int PersonaId { get; set; }
+    public Personas persona { get; set; } = new Personas();
+
+    protected override void OnInitialized()
+    {
+        persona = new Personas();
+
+        if (PersonaId > 0)
+        {
+            Personas personaTem = personasBLL.Buscar(PersonaId);
+            if (personaTem != null)
+                persona = personaTem;
+        }
+    }
+
+    public void Nuevo()
+    {
+        persona = new Personas();
+    }
+
+    public void Buscar()
+    {
+        if (persona.PersonaId > 0)
+        {
+            var encontrado = personasBLL.Buscar(persona.PersonaId);
+            Buscar();
+            if (encontrado != null)
+            {
+                this.persona = encontrado;
+            }
+            else
+            {
+
+            }
+        }
+    }
+
+    public void Guardar()
+    {
+        var guardado = personasBLL.Guardar(persona);
+        if (guardado)
+        {
+            Nuevo();
+        }
+        else
+        {
+
+        }
+
+    }
+
+    public void Eliminar()
+    {
+        var guardado = personasBLL.Eliminar(persona);
+        if (guardado)
+        {
+            Nuevo();
+        }
+        else
+        {
+
+        }
+
+    }
+
+
+
+
+
+
+}
